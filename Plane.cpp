@@ -15,7 +15,7 @@ Plane::Plane() {
     sintel_pos[1] = 0.0f;
     sintel_pos[2] = 0.0f;
     
-    sintel = glmReadOBJ("assets/Legorreta_good.obj");
+    sintel = glmReadOBJ("assets/TECdefinitivo.obj");
     glmFacetNormals(sintel);
     glmDimensions(sintel, sintel_dims);
     float center[3] = { sintel_pos[0] + sintel_dims[0] / 2.0f,
@@ -24,9 +24,6 @@ Plane::Plane() {
     radius = sqrtf(center[0] * center[0] +
                    center[1] * center[1] +
                    center[2] * center[2]);
-    
-    printf("SINTEL_DIMS={%.3f,%.3f,%.3f,%.3f}\n", sintel_dims[0], sintel_dims[1], sintel_dims[2]);
-    printf("RADIUS=%.3f\n", radius);
     
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);

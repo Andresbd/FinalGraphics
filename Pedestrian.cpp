@@ -54,7 +54,7 @@ void Pedestrian::draw() {
     glPushMatrix(); {
         glTranslatef(location->x, location->y, location->z);
         glColor3f(r, g, b);
-        glutSolidSphere(0.2, 10, 10);
+        glutSolidSphere(1.0, 50, 50);
     } glPopMatrix();
     //bezier->draw();
 }

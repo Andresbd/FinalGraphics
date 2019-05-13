@@ -71,11 +71,13 @@ void axes() {
 void init() // FOR GLUT LOOP
 {
     mainCam = new Camera();
-    mainCam->pos.y = 30;
-    mainCam->pos.z = 30;
-    mainCam->dir.y = -1;
+    mainCam->dir.y = -45;
+    mainCam->pos.y = 25;
+    mainCam->pos.z = -30;
+    mainCam->fov = 150;
+    mainCam->farDist = 250;
     
-    c = new Character(-8,-8);
+    c = new Character(0,0);
     
 //    Fuentes de luz
     glEnable(GL_LIGHTING);
@@ -103,13 +105,13 @@ void init() // FOR GLUT LOOP
     
     ctrlPoints = new Point *[7];
     
-    ctrlPoints[0] = new Point(-7.75, 0, 5.75);
-    ctrlPoints[1] = new Point(-6.5, 0, 4.75);
-    ctrlPoints[2] = new Point(-6, 0, 2.75);
-    ctrlPoints[3] = new Point(-5.75, 0, -1.25);
-    ctrlPoints[4] = new Point(-3.75, 0, -0.25);
-    ctrlPoints[5] = new Point(-2.25, 0, -1.25);
-    ctrlPoints[6] = new Point(-0.5, 0, -2.25);
+    ctrlPoints[0] = new Point(-25, 0, -36);
+    ctrlPoints[1] = new Point(-15, 0, -35);
+    ctrlPoints[2] = new Point(-5, 0, -37);
+    ctrlPoints[3] = new Point(5, 0, -38);
+    ctrlPoints[4] = new Point(15, 0, -39);
+    ctrlPoints[5] = new Point(20, 0, -40);
+    ctrlPoints[6] = new Point(24, 0, -40);
     
     p = new Pedestrian(0, 0, 1, ctrlPoints);
     
@@ -207,7 +209,7 @@ void arrowKey(int key, int x, int y) {
             _x += 0.1f;
             break;
     }
-    c->move(_x*2, _z*2);
+    c->move(_x*4, _z*4);
     
     glutPostRedisplay();
     
