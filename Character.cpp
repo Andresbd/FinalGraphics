@@ -7,3 +7,25 @@
 //
 
 #include "Character.hpp"
+
+Character::Character()
+{
+}
+
+Character::Character(float x, float z)
+{
+    p = new Point(x, 0, z);
+}
+
+Character::~Character()
+{
+}
+
+void Character::move(float _x, float _z) {
+    p->x += _x;
+    p->z += _z;
+}
+
+void Character::draw() {
+    p->draw();
+}

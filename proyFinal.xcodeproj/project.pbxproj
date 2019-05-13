@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		290E1E9A2289BBEF0005BC5C /* Character.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 290E1E982289BBEF0005BC5C /* Character.cpp */; };
 		293784472281EC0000B8F06C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 293784462281EC0000B8F06C /* main.cpp */; };
 		2937844A2281EC3C00B8F06C /* cTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 293784482281EC3C00B8F06C /* cTexture.cpp */; };
 		2937844D2281EC7500B8F06C /* Bezier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2937844B2281EC7500B8F06C /* Bezier.cpp */; };
@@ -34,6 +35,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		290E1E982289BBEF0005BC5C /* Character.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Character.cpp; sourceTree = "<group>"; };
+		290E1E992289BBEF0005BC5C /* Character.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Character.hpp; sourceTree = "<group>"; };
 		2937843C2281EBDC00B8F06C /* proyFinal */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = proyFinal; sourceTree = BUILT_PRODUCTS_DIR; };
 		293784462281EC0000B8F06C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		293784482281EC3C00B8F06C /* cTexture.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cTexture.cpp; sourceTree = "<group>"; };
@@ -74,6 +77,8 @@
 			isa = PBXGroup;
 			children = (
 				293784462281EC0000B8F06C /* main.cpp */,
+				290E1E982289BBEF0005BC5C /* Character.cpp */,
+				290E1E992289BBEF0005BC5C /* Character.hpp */,
 				293784482281EC3C00B8F06C /* cTexture.cpp */,
 				293784562281EECC00B8F06C /* Pedestrian.cpp */,
 				29BC2BEC228642B100A423E8 /* cCamera.cpp */,
@@ -187,6 +192,7 @@
 				293784552281EDCC00B8F06C /* glmimg.cpp in Sources */,
 				29BC2BEE228642B100A423E8 /* cCamera.cpp in Sources */,
 				29BC2BF12286430100A423E8 /* vecs.cpp in Sources */,
+				290E1E9A2289BBEF0005BC5C /* Character.cpp in Sources */,
 				2937844A2281EC3C00B8F06C /* cTexture.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

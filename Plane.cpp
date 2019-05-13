@@ -15,7 +15,7 @@ Plane::Plane() {
     sintel_pos[1] = 0.0f;
     sintel_pos[2] = 0.0f;
     
-    sintel = glmReadOBJ("assets/CEDETECtga.obj");
+    sintel = glmReadOBJ("assets/Legorreta_good.obj");
     glmFacetNormals(sintel);
     glmDimensions(sintel, sintel_dims);
     float center[3] = { sintel_pos[0] + sintel_dims[0] / 2.0f,

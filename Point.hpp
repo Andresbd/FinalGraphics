@@ -39,4 +39,6 @@ public:
     
     Point * multiplyByScalar(float s);
     Point * add(Point * other);
+    void draw();
+    void update();
 };

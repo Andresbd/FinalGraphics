@@ -36,3 +36,11 @@ Point * Point::add(Point * other) {
     p->z += other->z;
     return p;
 }
+
+void Point::draw() {
+    glPushMatrix(); {
+        glTranslatef(x, y, z);
+        glColor3f(1, 0, 0);
+        glutSolidSphere(1.0, 50, 50);
+    }glPopMatrix();
+}

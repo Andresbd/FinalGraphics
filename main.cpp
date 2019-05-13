@@ -34,6 +34,7 @@
 #include "Plane.hpp"
 #include "Point.hpp"
 #include "cCamera.hpp"
+#include "Character.hpp"
 
 GLfloat *Ia, *Is, *Id, *Ip;
 Camera* mainCam;
@@ -44,6 +45,7 @@ int mouseMotionType = 0;
 Plane * plane;
 Pedestrian * p;
 Point ** ctrlPoints;
+Character * c;
 
 GLfloat*    global_ambient;
 
@@ -69,8 +71,11 @@ void axes() {
 void init() // FOR GLUT LOOP
 {
     mainCam = new Camera();
-    mainCam->pos.y = 15;
-    mainCam->pos.z = 20;
+    mainCam->pos.y = 30;
+    mainCam->pos.z = 30;
+    mainCam->dir.y = -1;
+    
+    c = new Character(-8,-8);
     
 //    Fuentes de luz
     glEnable(GL_LIGHTING);
@@ -121,6 +126,7 @@ void display()                            // Called for each frame (about 60 tim
     mainCam->setView();
     plane->draw();
     p->draw();
+    c->draw();
     glutSwapBuffers();                                                // Swap the hidden and visible buffers.
 }
 
@@ -148,8 +154,8 @@ void reshape(int x, int y)                                            // Called 
 void motion(int x, int y) {
     switch (mouseMotionType) {
         case 1:
-            mainCam->moveAround(-(mouseCords[1] - y)*0.01, vector3f(0, 1, 0));
-            mainCam->moveAround(-(mouseCords[0] - x)*0.01, vector3f(1, 0, 0));
+            mainCam->moveAround(-(mouseCords[1] - y)*0.01, vector3f(1, 0, 0));
+            mainCam->moveAround(-(mouseCords[0] - x)*0.01, vector3f(0, 1, 0));
             break;
         case 2:
             mainCam->moveAround(-(mouseCords[1] - x)*0.01, vector3f(0, 0, 1));
@@ -185,6 +191,28 @@ void mouse(int button, int state, int x, int y) {
     }
 }
 
+void arrowKey(int key, int x, int y) {
+    float _x = 0, _z = 0;
+    switch (key) {
+        case GLUT_KEY_UP:
+            _z -= 0.1f;
+            break;
+        case GLUT_KEY_DOWN:
+            _z += 0.1f;
+            break;
+        case GLUT_KEY_LEFT:
+            _x -= 0.1f;
+            break;
+        case GLUT_KEY_RIGHT:
+            _x += 0.1f;
+            break;
+    }
+    c->move(_x*2, _z*2);
+    
+    glutPostRedisplay();
+    
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -198,7 +226,7 @@ int main(int argc, char* argv[])
     
     glutMouseFunc(mouse);
     glutMotionFunc(motion);
-    
+    glutSpecialFunc(arrowKey);
     glutReshapeFunc(reshape);                                        // Reshape CALLBACK function.
     glutDisplayFunc(display);                                        // Display CALLBACK function.
     glutIdleFunc(idle);                                                // Idle CALLBACK function.
