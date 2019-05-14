@@ -44,7 +44,7 @@ int mouseMotionType = 0;
 
 Plane * plane;
 Pedestrian ** p;
-Point ** ctrlP0, ** ctrlP1, ** ctrlP2, ** ctrlP3, ** ctrlP4, ** ctrlP5;
+Point ** ctrlP0, ** ctrlP1, ** ctrlP2, ** ctrlP3, ** ctrlP4, ** ctrlP5, ** ctrlP6;
 Character * c;
 
 float spawned;
@@ -74,9 +74,8 @@ void init() // FOR GLUT LOOP
 {
     mainCam = new Camera();
     mainCam->dir.y = -45;
-    mainCam->pos.y = 30;
-    mainCam->pos.z = -30;
-    mainCam->fov = 150;
+    mainCam->pos.y = 20;
+//    mainCam->pos.z = -30;
     mainCam->farDist = 250;
     
     c = new Character(0,0);
@@ -109,79 +108,99 @@ void init() // FOR GLUT LOOP
     
     // BEZIER CURVE ------------------------- 0
     ctrlP0 = new Point *[7];
-    ctrlP0[0] = new Point(7, 0, 7.5);
-    ctrlP0[1] = new Point(7, 0, 0);
-    ctrlP0[2] = new Point(7, 0, -5);
-    ctrlP0[3] = new Point(7, 0, -10);
-    ctrlP0[4] = new Point(6, 0, -20);
-    ctrlP0[5] = new Point(7, 0, -35);
-    ctrlP0[6] = new Point(7, 0, -56.8);
+    ctrlP0[0] = new Point(3, 0.5, -18);
+    ctrlP0[1] = new Point(4, 0.5, -12);
+    ctrlP0[2] = new Point(7, 0.5, -6);
+    ctrlP0[3] = new Point(7, 0.5, 1);
+    ctrlP0[4] = new Point(6, 0.5, 7);
+    ctrlP0[5] = new Point(7, 0.5, 16);
+    ctrlP0[6] = new Point(7, 0.5, 23);
     
     // BEZIER CURVE ------------------------- 1
     ctrlP1 = new Point *[7];
-    ctrlP1[0] = new Point(-25, 0, -36);
-    ctrlP1[1] = new Point(-15, 0, -35);
-    ctrlP1[2] = new Point(-5, 0, -37);
-    ctrlP1[3] = new Point(5, 0, -38);
-    ctrlP1[4] = new Point(15, 0, -39);
-    ctrlP1[5] = new Point(20, 0, -40);
-    ctrlP1[6] = new Point(24, 0, -40);
+    ctrlP1[0] = new Point(-7, 0.5, 22);
+    ctrlP1[1] = new Point(-6, 0.5, 15);
+    ctrlP1[2] = new Point(1, 0.5, 14);
+    ctrlP1[3] = new Point(6, 0.5, 11);
+    ctrlP1[4] = new Point(11, 0.5, 5);
+    ctrlP1[5] = new Point(14, 0.5, -1);
+    ctrlP1[6] = new Point(15, 0.5, -8);
     
     // BEZIER CURVE ------------------------- 2
     ctrlP2 = new Point *[7];
-    ctrlP2[0] = new Point(16, 0, 7.5);
-    ctrlP2[1] = new Point(16, 0, 0);
-    ctrlP2[2] = new Point(16, 0, -5);
-    ctrlP2[3] = new Point(16, 0, -15);
-    ctrlP2[4] = new Point(15, 0, -25);
-    ctrlP2[5] = new Point(14, 0, -35);
-    ctrlP2[6] = new Point(18, 0, -56);
+    ctrlP2[0] = new Point(-19, 0.5, -17);
+    ctrlP2[1] = new Point(-12, 0.5, -16);
+    ctrlP2[2] = new Point(-5, 0.5, -14);
+    ctrlP2[3] = new Point(2, 0.5, -11);
+    ctrlP2[4] = new Point(5, 0.5, -6);
+    ctrlP2[5] = new Point(11, 0.5, -1);
+    ctrlP2[6] = new Point(16, 0.5, 4);
     
     // BEZIER CURVE ------------------------- 3
     ctrlP3 = new Point *[7];
-    ctrlP3[0] = new Point(-25, 0, -30);
-    ctrlP3[1] = new Point(-15, 0, -31);
-    ctrlP3[2] = new Point(-5, 0, -30);
-    ctrlP3[3] = new Point(5, 0, -30);
-    ctrlP3[4] = new Point(15, 0, -30);
-    ctrlP3[5] = new Point(20, 0, -30);
-    ctrlP3[6] = new Point(24, 0, -30);
+    ctrlP3[0] = new Point(10, 0.5, 8);
+    ctrlP3[1] = new Point(7, 0.5, 10);
+    ctrlP3[2] = new Point(7, 0.5, 17);
+    ctrlP3[3] = new Point(7, 0.5, 22);
+    ctrlP3[4] = new Point(7, 0.5, 28);
+    ctrlP3[5] = new Point(7, 0.5, 34);
+    ctrlP3[6] = new Point(9, 0.5, 40);
     
     // BEZIER CURVE ------------------------- 4
     ctrlP4 = new Point *[7];
-    ctrlP4[0] = new Point(0, 0, 0);
-    ctrlP4[1] = new Point(20, 0, 0);
-    ctrlP4[2] = new Point(15, 0, -20);
-    ctrlP4[3] = new Point(18, 0, -10);
-    ctrlP4[4] = new Point(18, 0, -30);
-    ctrlP4[5] = new Point(17, 0, -40);
-    ctrlP4[6] = new Point(18, 0, -50);
+    ctrlP4[0] = new Point(-2, 0.5, 35);
+    ctrlP4[1] = new Point(4, 0.5, 33);
+    ctrlP4[2] = new Point(8, 0.5, 27);
+    ctrlP4[3] = new Point(8, 0.5, 21);
+    ctrlP4[4] = new Point(8, 0.5, 15);
+    ctrlP4[5] = new Point(7, 0.5, 6);
+    ctrlP4[6] = new Point(10, 0.5, 1);
     
     // BEZIER CURVE ------------------------- 5
     ctrlP5 = new Point *[7];
-    ctrlP5[0] = new Point(-25, 0, -32);
-    ctrlP5[1] = new Point(-15, 0, -32);
-    ctrlP5[2] = new Point(-5, 0, -32);
-    ctrlP5[3] = new Point(5, 0, -32);
-    ctrlP5[4] = new Point(15, 0, -32);
-    ctrlP5[5] = new Point(20, 0, -42);
-    ctrlP5[6] = new Point(24, 0, -42);
+    ctrlP5[0] = new Point(2, 0.5, 16);
+    ctrlP5[1] = new Point(1, 0.5, 9);
+    ctrlP5[2] = new Point(3, 0.5, 3);
+    ctrlP5[3] = new Point(7, 0.5, -3);
+    ctrlP5[4] = new Point(10, 0.5, -8);
+    ctrlP5[5] = new Point(8, 0.5, -13);
+    ctrlP5[6] = new Point(4, 0.5, -19);
+    
+    // BEZIER CURVE ------------------------- 6
+    ctrlP6 = new Point *[7];
+    ctrlP6[0] = new Point(-24, 0.5, 19);
+    ctrlP6[1] = new Point(-25, 0.5, 13);
+    ctrlP6[2] = new Point(-20, 0.5, 8);
+    ctrlP6[3] = new Point(-14, 0.5, 7);
+    ctrlP6[4] = new Point(-8, 0.5, 7);
+    ctrlP6[5] = new Point(-2, 0.5, 7);
+    ctrlP6[6] = new Point(3, 0.5, 7);
     
     p = new Pedestrian*[spawned];
     
-    for(int x = 0; x <= spawned; x++) {
-        if (x<16) {
-            p[x] = new Pedestrian(ctrlP0, x);
-        }else if (x >= 16 && x < 32) {
-            p[x] = new Pedestrian(ctrlP1, x);
-        }else if(x >= 32 && x < 48) {
-            p[x] = new Pedestrian(ctrlP2, x);
-        }else if(x >= 48 && x < 64) {
-            p[x] = new Pedestrian(ctrlP3, x);
-        }else if(x >= 64 && x < 80) {
-            p[x] = new Pedestrian(ctrlP4, x);
-        }else if(x >= 80) {
-            p[x] = new Pedestrian(ctrlP5, x);
+    for (int i = 0; i <= spawned; i++) {
+        switch (i % 7) {
+            case 0:
+                p[i] = new Pedestrian(ctrlP0, i);
+                break;
+            case 1:
+                p[i] = new Pedestrian(ctrlP1, i);
+                break;
+            case 2:
+                p[i] = new Pedestrian(ctrlP2, i);
+                break;
+            case 3:
+                p[i] = new Pedestrian(ctrlP3, i);
+                break;
+            case 4:
+                p[i] = new Pedestrian(ctrlP4, i);
+                break;
+            case 5:
+                p[i] = new Pedestrian(ctrlP5, i);
+                break;
+            case 6:
+                p[i] = new Pedestrian(ctrlP6, i);
+                break;
         }
     }
     
@@ -207,7 +226,39 @@ void display()                            // Called for each frame (about 60 tim
 void idle()                                                            // Called when drawing is finished.
 {
     for (int i = 0; i < spawned; i++) {
-        p[i]->update();
+        if(!c->inCollision(p[i])){
+            for (int j = 0; j < spawned; j++) {
+                if (i != j) {
+                    if (p[i]->inCollision(p[j])) {
+                        //                    printf("collision: %d and %d\n", i, j);
+                        if (p[i]->bezier->ctrlPoints == p[j]->bezier->ctrlPoints) {
+                            //                        printf("   same curve\n", i, j);
+                            if (p[i]->forward != p[j]->forward) {
+                                p[i]->goAround = true;
+                                p[i]->update();
+                            }
+                            else {
+                                if (i < j) {
+                                    p[i]->update();
+                                }
+                            }
+                        }
+                        else {
+                            //                        printf("   diff curve\n", i, j);
+                            if (i < j) {
+                                p[i]->update();
+                            }
+                            else {
+                                p[i]->goAround = true;
+                            }
+                        }
+                    }
+                    else {
+                        p[i]->update();
+                    }
+                }
+            }
+        }
     }
     glutPostRedisplay();                                            // Display again.
 }
@@ -234,10 +285,10 @@ void motion(int x, int y) {
             mainCam->moveAround(-(mouseCords[0] - x)*0.01, vector3f(0, 1, 0));
             break;
         case 2:
-            mainCam->moveAround(-(mouseCords[1] - x)*0.01, vector3f(0, 0, 1));
+            mainCam->dir.y++;
             break;
         case 3:
-            mainCam->moveAround(-(mouseCords[1] - y)*0.01, vector3f(0, 0, 1));
+            mainCam->dir.y--;
             break;
         case 4:
             
@@ -289,6 +340,25 @@ void arrowKey(int key, int x, int y) {
     
 }
 
+void keysInput(unsigned char key, int x, int y) {
+    switch (key) {
+        case 'w':
+            mainCam->pos.z--;
+            break;
+        case 's':
+            mainCam->pos.z++;
+            break;
+        case 'a':
+            mainCam->pos.x--;
+            break;
+        case 'd':
+            mainCam->pos.x++;
+            break;
+        default:
+            break;
+    }
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -300,6 +370,7 @@ int main(int argc, char* argv[])
     
     init();
     
+    glutKeyboardFunc(keysInput);
     glutMouseFunc(mouse);
     glutMotionFunc(motion);
     glutSpecialFunc(arrowKey);

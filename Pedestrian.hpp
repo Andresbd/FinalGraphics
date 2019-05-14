@@ -44,6 +44,7 @@ public:
     float r, g, b;
     float radius;
     int id;
+    float armRot;
     
     Bezier * bezier;
     Point * location;

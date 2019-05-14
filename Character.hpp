@@ -29,6 +29,9 @@
 #endif
 
 #include "Point.hpp"
+#include <stdlib.h>
+#include "vecs.hpp"
+#include "Pedestrian.hpp"
 
 
 
@@ -41,6 +44,11 @@ public:
     ~Character();
     Point * p;
     void move(float _x, float _z);
+    bool inCollision(Pedestrian * other);
     void draw();
     void update();
+    
+    float radius;
+    float armRot;
+    GLfloat *ka0, *ks0, *kd0, *alpha0;
 };

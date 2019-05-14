@@ -63,6 +63,7 @@ void Plane::draw() {
     glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, alpha1);
     
     glPushMatrix(); {
+        glTranslatef(0, 0, 35);
         glmDraw(sintel, GLM_SMOOTH | GLM_TEXTURE);
     }
     glPopMatrix();

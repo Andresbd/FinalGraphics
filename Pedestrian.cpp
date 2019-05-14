@@ -10,13 +10,14 @@
 Pedestrian::Pedestrian(Point ** _ctrlPoints, int _id) {
     
     id = _id;
+    armRot = 0;
     
-    bezier = new Bezier(7, _ctrlPoints);
+    bezier = new Bezier(6, _ctrlPoints);
     r = g = b = 1.0f;
     t = (float)rand() / RAND_MAX;
     location = new Point(bezier->evaluateBezier(t));
     realLocation = new Point(bezier->evaluateBezier(t));
-    radius = 1.0f;
+    radius = 0.5f;
     float dirBool = (float)rand() / RAND_MAX;
     if (dirBool < 0.5) {
         forward = false;
@@ -68,35 +69,47 @@ void Pedestrian::draw() {
     glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, alpha0);
     
     glPushMatrix(); {
+        
         glTranslatef(realLocation->x, realLocation->y, realLocation->z);
-        //glutSolidSphere(0.2, 10, 10);
-        // HEAD
-        glPushMatrix(); {
-            glTranslatef(0, 2.5, 0);
-            glutSolidSphere(radius, 10, 10);
-        } glPopMatrix();
-        // TORSO
-        glPushMatrix(); {
-            glutSolidSphere(radius, 10, 10);
-        } glPopMatrix();
-        // LEFT ARM
-        glPushMatrix(); {
-            glTranslatef(1.5, -0.5, 0);
-            glutSolidSphere(radius, 10, 10);
-        } glPopMatrix();
-        // RIGHT ARM
-        glPushMatrix(); {
-            glTranslatef(-1.5, 0.5, 0);
-            glutSolidSphere(radius, 10, 10);
-        } glPopMatrix();
+        glScalef(radius, radius, radius);
+        glPushMatrix();
+        {
+            glTranslatef(0.0f, 1.4f, 0.0f);
+            glutSolidSphere(0.6, 20, 20);
+        }
+        glPopMatrix();
+        glPushMatrix();
+        {
+            glScalef(1.0f, 0.8f, 0.5f);
+            glutSolidSphere(1.0, 20, 20);
+        }
+        glPopMatrix();
+        glPushMatrix();
+        {
+            glRotatef(30 * sin(DEGTORAD(armRot)), 1.0f, 0.0f, 0.0f);
+            glTranslatef(1.1f, -0.5f, 0.0f);
+            glScalef(0.2f, 0.8f, 0.2f);
+            glutSolidSphere(1.0, 20, 20);
+        }
+        glPopMatrix();
+        glPushMatrix();
+        {
+            glRotatef(30 * sin(DEGTORAD(armRot + 180)), 1.0f, 0.0f, 0.0f);
+            glTranslatef(-1.1f, -0.5f, 0.0f);
+            glScalef(0.2f, 0.8f, 0.2f);
+            glutSolidSphere(1.0, 20, 20);
+        }
+        glPopMatrix();
     } glPopMatrix();
     if (id < 6) {
-        bezier->draw();
+//        bezier->draw();
     }
     //bezier->draw();
 }
 
 void Pedestrian::update() {
+    armRot++;
+    
     if (!goAround) {
         if (t >= 1) {
             forward = false;
@@ -108,12 +121,12 @@ void Pedestrian::update() {
     
     if (forward) {
         do {
-            t += 0.01f;
+            t += 0.00005f;
         } while (t < 0);
     }
     else {
         do {
-            t -= 0.01f;
+            t -= 0.00005f;
         } while (t > 1);
     }
     
