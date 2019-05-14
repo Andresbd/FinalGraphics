@@ -43,9 +43,11 @@ int mouseCords[2];
 int mouseMotionType = 0;
 
 Plane * plane;
-Pedestrian * p;
-Point ** ctrlPoints;
+Pedestrian ** p;
+Point ** ctrlP0, ** ctrlP1, ** ctrlP2, ** ctrlP3, ** ctrlP4, ** ctrlP5;
 Character * c;
+
+float spawned;
 
 GLfloat*    global_ambient;
 
@@ -72,12 +74,14 @@ void init() // FOR GLUT LOOP
 {
     mainCam = new Camera();
     mainCam->dir.y = -45;
-    mainCam->pos.y = 25;
+    mainCam->pos.y = 30;
     mainCam->pos.z = -30;
     mainCam->fov = 150;
     mainCam->farDist = 250;
     
     c = new Character(0,0);
+    
+    spawned = 100;
     
 //    Fuentes de luz
     glEnable(GL_LIGHTING);
@@ -103,17 +107,83 @@ void init() // FOR GLUT LOOP
     
     plane = new Plane();
     
-    ctrlPoints = new Point *[7];
+    // BEZIER CURVE ------------------------- 0
+    ctrlP0 = new Point *[7];
+    ctrlP0[0] = new Point(7, 0, 7.5);
+    ctrlP0[1] = new Point(7, 0, 0);
+    ctrlP0[2] = new Point(7, 0, -5);
+    ctrlP0[3] = new Point(7, 0, -10);
+    ctrlP0[4] = new Point(6, 0, -20);
+    ctrlP0[5] = new Point(7, 0, -35);
+    ctrlP0[6] = new Point(7, 0, -56.8);
     
-    ctrlPoints[0] = new Point(-25, 0, -36);
-    ctrlPoints[1] = new Point(-15, 0, -35);
-    ctrlPoints[2] = new Point(-5, 0, -37);
-    ctrlPoints[3] = new Point(5, 0, -38);
-    ctrlPoints[4] = new Point(15, 0, -39);
-    ctrlPoints[5] = new Point(20, 0, -40);
-    ctrlPoints[6] = new Point(24, 0, -40);
+    // BEZIER CURVE ------------------------- 1
+    ctrlP1 = new Point *[7];
+    ctrlP1[0] = new Point(-25, 0, -36);
+    ctrlP1[1] = new Point(-15, 0, -35);
+    ctrlP1[2] = new Point(-5, 0, -37);
+    ctrlP1[3] = new Point(5, 0, -38);
+    ctrlP1[4] = new Point(15, 0, -39);
+    ctrlP1[5] = new Point(20, 0, -40);
+    ctrlP1[6] = new Point(24, 0, -40);
     
-    p = new Pedestrian(0, 0, 1, ctrlPoints);
+    // BEZIER CURVE ------------------------- 2
+    ctrlP2 = new Point *[7];
+    ctrlP2[0] = new Point(16, 0, 7.5);
+    ctrlP2[1] = new Point(16, 0, 0);
+    ctrlP2[2] = new Point(16, 0, -5);
+    ctrlP2[3] = new Point(16, 0, -15);
+    ctrlP2[4] = new Point(15, 0, -25);
+    ctrlP2[5] = new Point(14, 0, -35);
+    ctrlP2[6] = new Point(18, 0, -56);
+    
+    // BEZIER CURVE ------------------------- 3
+    ctrlP3 = new Point *[7];
+    ctrlP3[0] = new Point(-25, 0, -30);
+    ctrlP3[1] = new Point(-15, 0, -31);
+    ctrlP3[2] = new Point(-5, 0, -30);
+    ctrlP3[3] = new Point(5, 0, -30);
+    ctrlP3[4] = new Point(15, 0, -30);
+    ctrlP3[5] = new Point(20, 0, -30);
+    ctrlP3[6] = new Point(24, 0, -30);
+    
+    // BEZIER CURVE ------------------------- 4
+    ctrlP4 = new Point *[7];
+    ctrlP4[0] = new Point(0, 0, 0);
+    ctrlP4[1] = new Point(20, 0, 0);
+    ctrlP4[2] = new Point(15, 0, -20);
+    ctrlP4[3] = new Point(18, 0, -10);
+    ctrlP4[4] = new Point(18, 0, -30);
+    ctrlP4[5] = new Point(17, 0, -40);
+    ctrlP4[6] = new Point(18, 0, -50);
+    
+    // BEZIER CURVE ------------------------- 5
+    ctrlP5 = new Point *[7];
+    ctrlP5[0] = new Point(-25, 0, -32);
+    ctrlP5[1] = new Point(-15, 0, -32);
+    ctrlP5[2] = new Point(-5, 0, -32);
+    ctrlP5[3] = new Point(5, 0, -32);
+    ctrlP5[4] = new Point(15, 0, -32);
+    ctrlP5[5] = new Point(20, 0, -42);
+    ctrlP5[6] = new Point(24, 0, -42);
+    
+    p = new Pedestrian*[spawned];
+    
+    for(int x = 0; x <= spawned; x++) {
+        if (x<16) {
+            p[x] = new Pedestrian(ctrlP0, x);
+        }else if (x >= 16 && x < 32) {
+            p[x] = new Pedestrian(ctrlP1, x);
+        }else if(x >= 32 && x < 48) {
+            p[x] = new Pedestrian(ctrlP2, x);
+        }else if(x >= 48 && x < 64) {
+            p[x] = new Pedestrian(ctrlP3, x);
+        }else if(x >= 64 && x < 80) {
+            p[x] = new Pedestrian(ctrlP4, x);
+        }else if(x >= 80) {
+            p[x] = new Pedestrian(ctrlP5, x);
+        }
+    }
     
     glEnable(GL_DEPTH_TEST);            // Enable check for close and far objects.
     glClearColor(0.0, 0.0, 0.0, 0.0);    // Clear the color state.
@@ -127,14 +197,18 @@ void display()                            // Called for each frame (about 60 tim
     glLoadIdentity();                                                // Reset 3D view matrix.
     mainCam->setView();
     plane->draw();
-    p->draw();
+    for (int i = 0; i <= spawned; i++) {
+        p[i]->draw();
+    }
     c->draw();
     glutSwapBuffers();                                                // Swap the hidden and visible buffers.
 }
 
 void idle()                                                            // Called when drawing is finished.
 {
-    p->update();
+    for (int i = 0; i < spawned; i++) {
+        p[i]->update();
+    }
     glutPostRedisplay();                                            // Display again.
 }
 

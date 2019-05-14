@@ -30,6 +30,7 @@
 #include "Point.hpp"
 #include "Bezier.hpp"
 #include <stdio.h>
+#include "vecs.hpp"
 
 class Pedestrian{
 public:
@@ -37,15 +38,23 @@ public:
     GLfloat *ka0, *ks0, *kd0, *alpha0;
     
     bool forward;
+    bool goAround;
+    float sinAround;
     float t;
     float r, g, b;
+    float radius;
+    int id;
     
     Bezier * bezier;
     Point * location;
+    Point * oldLocation;
+    Point * realLocation;
     
-    Pedestrian(float _r, float _g, float _b, Point ** ctrlPoints);
+    //Pedestrian(float _r, float _g, float _b, Point ** ctrlPoints);
+    Pedestrian(Point ** ctrlPoints, int _id);
     ~Pedestrian();
     
     void draw();
     void update();
+    bool inCollision(Pedestrian * other);
 };

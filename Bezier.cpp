@@ -11,9 +11,9 @@
 
 Bezier::Bezier(int _degree, Point ** _ctrlPoints) {
     degree = _degree;
-    coefficients = new float[degree + 1];
-    ctrlPoints = new Point *[degree + 1];
-    for (int i = 0; i <= degree; i++) {
+    coefficients = new float[degree];
+    ctrlPoints = new Point *[degree];
+    for (int i = 0; i < degree; i++) {
         ctrlPoints[i] = new Point(_ctrlPoints[i]);
     }
 }
@@ -42,7 +42,7 @@ float Bezier::combination(int n, int i) {
 Point * Bezier::evaluateBezier(float t) {
     calculateCoefficients();
     Point * p = new Point(0, 0, 0);
-    for (int i = 0; i <= degree; i++) {
+    for (int i = 0; i < degree; i++) {
         float c = pow(1 - t, degree - i) * pow(t, i);
         p = p->add(ctrlPoints[i]->multiplyByScalar(coefficients[i] * c));
     }
@@ -50,7 +50,7 @@ Point * Bezier::evaluateBezier(float t) {
 }
 
 void Bezier::draw() {
-    for (int i = 0; i <= degree; i++) {
+    for (int i = 0; i < degree; i++) {
         glPushMatrix(); {
             glTranslatef(ctrlPoints[i]->x, ctrlPoints[i]->y, ctrlPoints[i]->z);
             glColor3f(1, 0, 0);
