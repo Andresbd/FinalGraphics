@@ -35,19 +35,20 @@
 #include "Point.hpp"
 #include "cCamera.hpp"
 #include "Character.hpp"
+#include "Car.hpp"
 
-GLfloat *Ia, *Is, *Id, *Ip;
-Camera* mainCam;
-
-int mouseCords[2];
-int mouseMotionType = 0;
+#define NUM_PEDESTRIANS 100
 
 Plane * plane;
-Pedestrian ** p;
+Pedestrian ** peds;
 Point ** ctrlP0, ** ctrlP1, ** ctrlP2, ** ctrlP3, ** ctrlP4, ** ctrlP5, ** ctrlP6;
+Point ** backP0;
+Camera * mainCam;
 Character * c;
+Car * car;
 
-float spawned;
+int mouseMotionType;
+float mouseCords[2];
 
 GLfloat*    global_ambient;
 
@@ -70,30 +71,56 @@ void axes() {
     glEnd();
 }
 
+void grid() {
+    glLineWidth(1.0);
+    glBegin(GL_LINES); {
+        glColor3f(0, 0, 0);
+        for (int i = -200; i <= 200; i += 5) {
+            glVertex3f(i, 1, -200);
+            glVertex3f(i, 1, 200);
+            
+            glVertex3f(-200, 1, i);
+            glVertex3f(200, 1, i);
+        }
+    } glEnd();
+    glutSolidSphere(1, 20, 20);
+}
+
 void init() // FOR GLUT LOOP
 {
     mainCam = new Camera();
     mainCam->dir.y = -45;
-    mainCam->pos.y = 20;
-//    mainCam->pos.z = -30;
+    mainCam->pos.y = 30;
     mainCam->farDist = 250;
     
-    c = new Character(0,0);
+    car = new Car(20, 0, 7);
     
-    spawned = 100;
+    c = new Character(0,0);
     
 //    Fuentes de luz
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
     
     GLfloat diffusel0[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
     GLfloat ambientl0[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
     GLfloat specularl0[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    GLfloat position[4] = { 0.0f, 0.0f, 1.0f, 0.0f };
+    GLfloat position0[4] = { 0.0f, 0.0f, 5.0f, 0.0f };
+    
+    GLfloat diffusel1[4] = { 1.0f, 0.85f, 0.3f, 1.0f };
+    GLfloat ambientl1[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    GLfloat specularl1[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    GLfloat position1[4] = { 0.0f, -0.5f, -1.0f, 1.0f };
+    
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambientl0);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffusel0);
     glLightfv(GL_LIGHT0, GL_SPECULAR, specularl0);
-    glLightfv(GL_LIGHT0, GL_POSITION, position);
+    glLightfv(GL_LIGHT0, GL_POSITION, position0);
+    
+    glLightfv(GL_LIGHT1, GL_AMBIENT, ambientl1);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, diffusel1);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, specularl1);
+    glLightfv(GL_LIGHT1, GL_POSITION, position1);
     
     global_ambient = new GLfloat[4];
     global_ambient[0] = 0.3f;
@@ -115,6 +142,16 @@ void init() // FOR GLUT LOOP
     ctrlP0[4] = new Point(6, 0.5, 7);
     ctrlP0[5] = new Point(7, 0.5, 16);
     ctrlP0[6] = new Point(7, 0.5, 23);
+    
+    // BEZIER CURVE ------------------------- Backup 0
+    backP0 = new Point *[7];
+    backP0[0] = new Point(4, 0.5, -18);
+    backP0[1] = new Point(5, 0.5, -12);
+    backP0[2] = new Point(8, 0.5, -6);
+    backP0[3] = new Point(8, 0.5, 1);
+    backP0[4] = new Point(7, 0.5, 7);
+    backP0[5] = new Point(8, 0.5, 16);
+    backP0[6] = new Point(8, 0.5, 23);
     
     // BEZIER CURVE ------------------------- 1
     ctrlP1 = new Point *[7];
@@ -176,35 +213,31 @@ void init() // FOR GLUT LOOP
     ctrlP6[5] = new Point(-2, 0.5, 7);
     ctrlP6[6] = new Point(3, 0.5, 7);
     
-    p = new Pedestrian*[spawned];
     
-    for (int i = 0; i <= spawned; i++) {
-        switch (i % 7) {
-            case 0:
-                p[i] = new Pedestrian(ctrlP0, i);
-                break;
-            case 1:
-                p[i] = new Pedestrian(ctrlP1, i);
-                break;
-            case 2:
-                p[i] = new Pedestrian(ctrlP2, i);
-                break;
-            case 3:
-                p[i] = new Pedestrian(ctrlP3, i);
-                break;
-            case 4:
-                p[i] = new Pedestrian(ctrlP4, i);
-                break;
-            case 5:
-                p[i] = new Pedestrian(ctrlP5, i);
-                break;
-            case 6:
-                p[i] = new Pedestrian(ctrlP6, i);
-                break;
+    peds = new Pedestrian *[NUM_PEDESTRIANS];
+    
+    for (int x = 0; x <= NUM_PEDESTRIANS; x++) {
+        if (x < 16) {
+            peds[x] = new Pedestrian(ctrlP0, backP0, x);
+        }
+        else if (x >= 16 && x < 32) {
+            peds[x] = new Pedestrian(ctrlP1, backP0, x);
+        }
+        else if (x >= 32 && x < 48) {
+            peds[x] = new Pedestrian(ctrlP2, backP0, x);
+        }
+        else if (x >= 48 && x < 64) {
+            peds[x] = new Pedestrian(ctrlP3, backP0, x);
+        }
+        else if (x >= 64 && x < 80) {
+            peds[x] = new Pedestrian(ctrlP4, backP0, x);
+        }
+        else if (x >= 80) {
+            peds[x] = new Pedestrian(ctrlP5, backP0, x);
         }
     }
     
-    glEnable(GL_DEPTH_TEST);            // Enable check for close and far objects.
+    glEnable(GL_DEPTH_TEST); ;          // Enable check for close and far objects.
     glClearColor(0.0, 0.0, 0.0, 0.0);    // Clear the color state.
     glMatrixMode(GL_MODELVIEW);            // Go to 3D mode.
     glLoadIdentity();                    // Reset 3D view matrix.
@@ -216,8 +249,9 @@ void display()                            // Called for each frame (about 60 tim
     glLoadIdentity();                                                // Reset 3D view matrix.
     mainCam->setView();
     plane->draw();
-    for (int i = 0; i <= spawned; i++) {
-        p[i]->draw();
+    car->draw();
+    for (int i = 0; i < NUM_PEDESTRIANS; i++) {
+        peds[i]->draw();
     }
     c->draw();
     glutSwapBuffers();                                                // Swap the hidden and visible buffers.
@@ -225,42 +259,42 @@ void display()                            // Called for each frame (about 60 tim
 
 void idle()                                                            // Called when drawing is finished.
 {
-    for (int i = 0; i < spawned; i++) {
-        if(!c->inCollision(p[i])){
-            for (int j = 0; j < spawned; j++) {
-                if (i != j) {
-                    if (p[i]->inCollision(p[j])) {
-                        //                    printf("collision: %d and %d\n", i, j);
-                        if (p[i]->bezier->ctrlPoints == p[j]->bezier->ctrlPoints) {
-                            //                        printf("   same curve\n", i, j);
-                            if (p[i]->forward != p[j]->forward) {
-                                p[i]->goAround = true;
-                                p[i]->update();
-                            }
-                            else {
-                                if (i < j) {
-                                    p[i]->update();
-                                }
-                            }
+    for (int i = 0; i < NUM_PEDESTRIANS; i++) {
+        if(!c->inCollision(peds[i])){
+        for (int j = 0; j < NUM_PEDESTRIANS; j++) {
+            if (i != j) {
+                if (peds[i]->inCollision(peds[j])) {
+                    //printf("collision: %d and %d\n", i, j);
+                    if (peds[i]->getActiveCtrlPoints() == peds[j]->getActiveCtrlPoints()) {
+                        //printf("   same curve\n", i, j);
+                        if (peds[i]->forward != peds[j]->forward) {
+                            peds[i]->goAround = true;
+                            peds[i]->update();
                         }
                         else {
-                            //                        printf("   diff curve\n", i, j);
-                            if (i < j) {
-                                p[i]->update();
-                            }
-                            else {
-                                p[i]->goAround = true;
+                            if (i > j) {
+                                peds[i]->isChangingCurve = true;
                             }
                         }
                     }
                     else {
-                        p[i]->update();
+                        //printf("   diff curve\n", i, j);
+                        if (i < j) {
+                            peds[i]->update();
+                        }
+                        else {
+                        }
                     }
+                }
+                else {
+                    peds[i]->update();
                 }
             }
         }
     }
-    glutPostRedisplay();                                            // Display again.
+    }
+    car->update();
+    glutPostRedisplay();                                         // Display again.
 }
 
 void reshape(int x, int y)                                            // Called when the window geometry changes.
@@ -341,6 +375,7 @@ void arrowKey(int key, int x, int y) {
 }
 
 void keysInput(unsigned char key, int x, int y) {
+    float _x = 0, _z = 0;
     switch (key) {
         case 'w':
             mainCam->pos.z--;
@@ -354,11 +389,23 @@ void keysInput(unsigned char key, int x, int y) {
         case 'd':
             mainCam->pos.x++;
             break;
+        case 'i':
+            _z -= 0.1f;
+            break;
+        case 'k':
+            _z += 0.1f;
+            break;
+        case 'j':
+            _x -= 0.1f;
+            break;
+        case 'l':
+            _x += 0.1f;
+            break;
         default:
             break;
     }
+    car->move(_x*4, _z*4);
 }
-
 
 int main(int argc, char* argv[])
 {
@@ -370,10 +417,10 @@ int main(int argc, char* argv[])
     
     init();
     
+    glutSpecialFunc(arrowKey);
     glutKeyboardFunc(keysInput);
     glutMouseFunc(mouse);
     glutMotionFunc(motion);
-    glutSpecialFunc(arrowKey);
     glutReshapeFunc(reshape);                                        // Reshape CALLBACK function.
     glutDisplayFunc(display);                                        // Display CALLBACK function.
     glutIdleFunc(idle);                                                // Idle CALLBACK function.

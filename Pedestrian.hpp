@@ -34,28 +34,33 @@
 
 class Pedestrian{
 public:
-    
     GLfloat *ka0, *ks0, *kd0, *alpha0;
     
     bool forward;
     bool goAround;
+    bool isChangingCurve;
+    bool usingBackup;
     float sinAround;
     float t;
     float r, g, b;
     float radius;
-    int id;
     float armRot;
+    int id;
     
-    Bezier * bezier;
+    Bezier * mainBezier;
+    Bezier * backBezier;
+    Bezier ** activeBezier;
     Point * location;
     Point * oldLocation;
     Point * realLocation;
     
     //Pedestrian(float _r, float _g, float _b, Point ** ctrlPoints);
-    Pedestrian(Point ** ctrlPoints, int _id);
+    Pedestrian(Point ** _ctrlPoints, int _id);
+    Pedestrian(Point ** _mainPoints, Point ** _backPoints, int _id);
     ~Pedestrian();
     
     void draw();
     void update();
     bool inCollision(Pedestrian * other);
+    Point ** getActiveCtrlPoints();
 };
