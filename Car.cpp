@@ -92,6 +92,7 @@ void Car::draw()
     glPushMatrix(); {
         glRotatef(rot, 0, -1, 0);
         glTranslated(pos[0], pos[1], pos[2]);
+        glScalef(2, 2, 2);
         glmDraw(sintel2, GLM_SMOOTH | GLM_TEXTURE);
     }
     glPopMatrix();
